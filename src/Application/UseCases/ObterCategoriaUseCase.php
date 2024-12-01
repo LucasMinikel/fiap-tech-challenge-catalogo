@@ -2,16 +2,17 @@
 
 namespace App\Application\UseCases;
 
+use App\Application\DTOs\CategoriaDTO;
 use App\Domain\Repositories\CategoriaRepositoryInterface;
 use App\Domain\Exceptions\CategoriaNotFoundException;
 
-class DeletarCategoriaUseCase
+class ObterCategoriaUseCase
 {
     public function __construct(
         private CategoriaRepositoryInterface $categoriaRepository
     ) {}
 
-    public function execute(string $id): void
+    public function execute(string $id): CategoriaDTO
     {
         $categoria = $this->categoriaRepository->findById($id);
 
@@ -19,6 +20,9 @@ class DeletarCategoriaUseCase
             throw new CategoriaNotFoundException("Categoria com ID $id não encontrada.");
         }
 
-        $this->categoriaRepository->delete($id);
+        return new CategoriaDTO(
+            $categoria->getId(),
+            $categoria->getNome()
+        );
     }
 }

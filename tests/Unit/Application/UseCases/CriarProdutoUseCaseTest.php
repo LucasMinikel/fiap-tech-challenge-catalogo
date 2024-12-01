@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Application\UseCases;
 
+use App\Application\DTOs\ProdutoDTO;
 use App\Application\UseCases\CriarProdutoUseCase;
 use App\Domain\Entities\Produto;
 use App\Domain\Repositories\ProdutoRepositoryInterface;
@@ -18,21 +19,17 @@ class CriarProdutoUseCaseTest extends TestCase
 
         $useCase = new CriarProdutoUseCase($produtoRepositoryMock);
 
-        $data = [
-            'nome' => 'Produto Teste',
-            'descricao' => 'Descrição do Produto Teste',
-            'preco' => 10.99,
-            'image' => 'imagem.jpg',
-            'categoria_id' => 'CATE456'
-        ];
+        $dto = new ProdutoDTO(null, 'Nome', 'Descrição', 10.99, 'imagem.jpg', 'CATE456');
 
-        $produto = $useCase->execute($data);
+        $result = $useCase->execute($dto);
 
-        $this->assertInstanceOf(Produto::class, $produto);
-        $this->assertEquals('Produto Teste', $produto->getNome());
-        $this->assertEquals('Descrição do Produto Teste', $produto->getDescricao());
-        $this->assertEquals(10.99, $produto->getPreco());
-        $this->assertEquals('imagem.jpg', $produto->getImage());
-        $this->assertEquals('CATE456', $produto->getCategoriaId());
+        $this->assertInstanceOf(ProdutoDTO::class, $result);
+        $this->assertNotNull($result->id);
+        $this->assertStringStartsWith('PROD', $result->id);
+        $this->assertEquals('Nome', $result->nome);
+        $this->assertEquals('Descrição', $result->descricao);
+        $this->assertEquals(10.99, $result->preco);
+        $this->assertEquals('imagem.jpg', $result->image);
+        $this->assertEquals('CATE456', $result->categoriaId);
     }
 }

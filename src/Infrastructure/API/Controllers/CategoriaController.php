@@ -2,42 +2,33 @@
 
 namespace App\Infrastructure\API\Controllers;
 
+use App\Application\DTOs\CategoriaDTO;
 use App\Application\UseCases\CriarCategoriaUseCase;
 use App\Application\UseCases\AtualizarCategoriaUseCase;
 use App\Application\UseCases\DeletarCategoriaUseCase;
-use App\Domain\Repositories\CategoriaRepositoryInterface;
+use App\Application\UseCases\ListarCategoriasUseCase;
+use App\Application\UseCases\ObterCategoriaUseCase;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 class CategoriaController
 {
-    private CriarCategoriaUseCase $criarCategoriaUseCase;
-    private AtualizarCategoriaUseCase $atualizarCategoriaUseCase;
-    private DeletarCategoriaUseCase $deletarCategoriaUseCase;
-    private CategoriaRepositoryInterface $categoriaRepository;
-
     public function __construct(
-        CriarCategoriaUseCase $criarCategoriaUseCase,
-        AtualizarCategoriaUseCase $atualizarCategoriaUseCase,
-        DeletarCategoriaUseCase $deletarCategoriaUseCase,
-        CategoriaRepositoryInterface $categoriaRepository
-    ) {
-        $this->criarCategoriaUseCase = $criarCategoriaUseCase;
-        $this->atualizarCategoriaUseCase = $atualizarCategoriaUseCase;
-        $this->deletarCategoriaUseCase = $deletarCategoriaUseCase;
-        $this->categoriaRepository = $categoriaRepository;
-    }
+        private CriarCategoriaUseCase $criarCategoriaUseCase,
+        private AtualizarCategoriaUseCase $atualizarCategoriaUseCase,
+        private DeletarCategoriaUseCase $deletarCategoriaUseCase,
+        private ListarCategoriasUseCase $listarCategoriasUseCase,
+        private ObterCategoriaUseCase $obterCategoriaUseCase
+    ) {}
 
     public function criar(Request $request, Response $response): Response
     {
         $data = $request->getParsedBody();
+        $dto = CategoriaDTO::fromArray($data);
 
-        $categoria = $this->criarCategoriaUseCase->execute($data);
+        $categoriaCriada = $this->criarCategoriaUseCase->execute($dto);
 
-        $response->getBody()->write(json_encode([
-            'id' => $categoria->getId(),
-            'nome' => $categoria->getNome()
-        ]));
+        $response->getBody()->write(json_encode($categoriaCriada->toArray()));
 
         return $response
             ->withHeader('Content-Type', 'application/json')
@@ -48,18 +39,12 @@ class CategoriaController
     {
         $id = $args['id'];
         $data = $request->getParsedBody();
+        $dto = CategoriaDTO::fromArray($data);
 
         try {
-            $categoria = $this->atualizarCategoriaUseCase->execute($id, $data);
-
-            $response->getBody()->write(json_encode([
-                'id' => $categoria->getId(),
-                'nome' => $categoria->getNome()
-            ]));
-
-            return $response
-                ->withHeader('Content-Type', 'application/json')
-                ->withStatus(200);
+            $categoriaAtualizada = $this->atualizarCategoriaUseCase->execute($id, $dto);
+            $response->getBody()->write(json_encode($categoriaAtualizada->toArray()));
+            return $response->withHeader('Content-Type', 'application/json');
         } catch (\Exception $e) {
             $response->getBody()->write(json_encode(['error' => $e->getMessage()]));
             return $response
@@ -74,7 +59,6 @@ class CategoriaController
 
         try {
             $this->deletarCategoriaUseCase->execute($id);
-
             return $response->withStatus(204);
         } catch (\Exception $e) {
             $response->getBody()->write(json_encode(['error' => $e->getMessage()]));
@@ -86,41 +70,26 @@ class CategoriaController
 
     public function listar(Request $request, Response $response): Response
     {
-        $categorias = $this->categoriaRepository->findAll();
+        $categorias = $this->listarCategoriasUseCase->execute();
 
-        $data = array_map(function ($categoria) {
-            return [
-                'id' => $categoria->getId(),
-                'nome' => $categoria->getNome()
-            ];
-        }, $categorias);
+        $response->getBody()->write(json_encode(array_map(fn($dto) => $dto->toArray(), $categorias)));
 
-        $response->getBody()->write(json_encode($data));
-
-        return $response
-            ->withHeader('Content-Type', 'application/json')
-            ->withStatus(200);
+        return $response->withHeader('Content-Type', 'application/json');
     }
 
     public function obter(Request $request, Response $response, array $args): Response
     {
         $id = $args['id'];
-        $categoria = $this->categoriaRepository->findById($id);
 
-        if (!$categoria) {
-            $response->getBody()->write(json_encode(['error' => 'Categoria não encontrada']));
+        try {
+            $categoria = $this->obterCategoriaUseCase->execute($id);
+            $response->getBody()->write(json_encode($categoria->toArray()));
+            return $response->withHeader('Content-Type', 'application/json');
+        } catch (\Exception $e) {
+            $response->getBody()->write(json_encode(['error' => $e->getMessage()]));
             return $response
                 ->withHeader('Content-Type', 'application/json')
                 ->withStatus(404);
         }
-
-        $response->getBody()->write(json_encode([
-            'id' => $categoria->getId(),
-            'nome' => $categoria->getNome()
-        ]));
-
-        return $response
-            ->withHeader('Content-Type', 'application/json')
-            ->withStatus(200);
     }
 }

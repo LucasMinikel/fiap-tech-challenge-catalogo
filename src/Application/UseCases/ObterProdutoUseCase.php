@@ -6,27 +6,19 @@ use App\Application\DTOs\ProdutoDTO;
 use App\Domain\Repositories\ProdutoRepositoryInterface;
 use App\Domain\Exceptions\ProdutoNotFoundException;
 
-class AtualizarProdutoUseCase
+class ObterProdutoUseCase
 {
     public function __construct(
         private ProdutoRepositoryInterface $produtoRepository
     ) {}
 
-    public function execute(string $id, ProdutoDTO $dto): ProdutoDTO
+    public function execute(string $id): ProdutoDTO
     {
         $produto = $this->produtoRepository->findById($id);
 
         if (!$produto) {
             throw new ProdutoNotFoundException("Produto com ID $id não encontrado.");
         }
-
-        $produto->setNome($dto->nome);
-        $produto->setDescricao($dto->descricao);
-        $produto->setPreco($dto->preco);
-        $produto->setImage($dto->image);
-        $produto->setCategoriaId($dto->categoriaId);
-
-        $this->produtoRepository->update($produto);
 
         return new ProdutoDTO(
             $produto->getId(),

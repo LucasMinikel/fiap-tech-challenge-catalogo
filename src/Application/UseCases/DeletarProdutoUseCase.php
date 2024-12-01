@@ -7,12 +7,9 @@ use App\Domain\Exceptions\ProdutoNotFoundException;
 
 class DeletarProdutoUseCase
 {
-    private ProdutoRepositoryInterface $produtoRepository;
-
-    public function __construct(ProdutoRepositoryInterface $produtoRepository)
-    {
-        $this->produtoRepository = $produtoRepository;
-    }
+    public function __construct(
+        private ProdutoRepositoryInterface $produtoRepository
+    ) {}
 
     public function execute(string $id): void
     {

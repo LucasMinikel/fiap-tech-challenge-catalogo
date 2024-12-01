@@ -9,18 +9,18 @@ class CategoriaTest extends TestCase
 {
     public function testCriacaoDeCategoria()
     {
-        $categoria = new Categoria('CATE123', 'Categoria Teste');
+        $categoria = new Categoria('CATE123', 'Nome da Categoria');
 
         $this->assertEquals('CATE123', $categoria->getId());
-        $this->assertEquals('Categoria Teste', $categoria->getNome());
+        $this->assertEquals('Nome da Categoria', $categoria->getNome());
     }
 
     public function testAtualizacaoDeCategoria()
     {
-        $categoria = new Categoria('CATE123', 'Categoria Teste');
+        $categoria = new Categoria('CATE123', 'Nome da Categoria');
 
-        $categoria->setNome('Nova Categoria');
+        $categoria->setNome('Novo Nome da Categoria');
 
-        $this->assertEquals('Nova Categoria', $categoria->getNome());
+        $this->assertEquals('Novo Nome da Categoria', $categoria->getNome());
     }
 }

@@ -4,14 +4,10 @@ namespace App\Domain\Entities;
 
 class Categoria
 {
-    private string $id;
-    private string $nome;
-
-    public function __construct(string $id, string $nome)
-    {
-        $this->id = $id;
-        $this->nome = $nome;
-    }
+    public function __construct(
+        private string $id,
+        private string $nome
+    ) {}
 
     public function getId(): string
     {

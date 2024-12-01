@@ -4,28 +4,14 @@ namespace App\Domain\Entities;
 
 class Produto
 {
-    private string $id;
-    private string $nome;
-    private string $descricao;
-    private float $preco;
-    private string $image;
-    private string $categoriaId;
-
     public function __construct(
-        string $id,
-        string $nome,
-        string $descricao,
-        float $preco,
-        string $image,
-        string $categoriaId
-    ) {
-        $this->id = $id;
-        $this->nome = $nome;
-        $this->descricao = $descricao;
-        $this->preco = $preco;
-        $this->image = $image;
-        $this->categoriaId = $categoriaId;
-    }
+        private string $id,
+        private string $nome,
+        private string $descricao,
+        private float $preco,
+        private string $image,
+        private string $categoriaId
+    ) {}
 
     public function getId(): string
     {

@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Application\UseCases;
 
+use App\Application\DTOs\CategoriaDTO;
 use App\Application\UseCases\CriarCategoriaUseCase;
 use App\Domain\Entities\Categoria;
 use App\Domain\Repositories\CategoriaRepositoryInterface;
@@ -18,13 +19,13 @@ class CriarCategoriaUseCaseTest extends TestCase
 
         $useCase = new CriarCategoriaUseCase($categoriaRepositoryMock);
 
-        $data = [
-            'nome' => 'Categoria Teste'
-        ];
+        $dto = new CategoriaDTO(null, 'Nome da Categoria');
 
-        $categoria = $useCase->execute($data);
+        $result = $useCase->execute($dto);
 
-        $this->assertInstanceOf(Categoria::class, $categoria);
-        $this->assertEquals('Categoria Teste', $categoria->getNome());
+        $this->assertInstanceOf(CategoriaDTO::class, $result);
+        $this->assertNotNull($result->id);
+        $this->assertStringStartsWith('CATE', $result->id);
+        $this->assertEquals('Nome da Categoria', $result->nome);
     }
 }

@@ -2,46 +2,33 @@
 
 namespace App\Infrastructure\API\Controllers;
 
+use App\Application\DTOs\ProdutoDTO;
 use App\Application\UseCases\CriarProdutoUseCase;
 use App\Application\UseCases\AtualizarProdutoUseCase;
 use App\Application\UseCases\DeletarProdutoUseCase;
-use App\Domain\Repositories\ProdutoRepositoryInterface;
+use App\Application\UseCases\ListarProdutosUseCase;
+use App\Application\UseCases\ObterProdutoUseCase;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 class ProdutoController
 {
-    private CriarProdutoUseCase $criarProdutoUseCase;
-    private AtualizarProdutoUseCase $atualizarProdutoUseCase;
-    private DeletarProdutoUseCase $deletarProdutoUseCase;
-    private ProdutoRepositoryInterface $produtoRepository;
-
     public function __construct(
-        CriarProdutoUseCase $criarProdutoUseCase,
-        AtualizarProdutoUseCase $atualizarProdutoUseCase,
-        DeletarProdutoUseCase $deletarProdutoUseCase,
-        ProdutoRepositoryInterface $produtoRepository
-    ) {
-        $this->criarProdutoUseCase = $criarProdutoUseCase;
-        $this->atualizarProdutoUseCase = $atualizarProdutoUseCase;
-        $this->deletarProdutoUseCase = $deletarProdutoUseCase;
-        $this->produtoRepository = $produtoRepository;
-    }
+        private CriarProdutoUseCase $criarProdutoUseCase,
+        private AtualizarProdutoUseCase $atualizarProdutoUseCase,
+        private DeletarProdutoUseCase $deletarProdutoUseCase,
+        private ListarProdutosUseCase $listarProdutosUseCase,
+        private ObterProdutoUseCase $obterProdutoUseCase
+    ) {}
 
     public function criar(Request $request, Response $response): Response
     {
         $data = $request->getParsedBody();
+        $dto = ProdutoDTO::fromArray($data);
 
-        $produto = $this->criarProdutoUseCase->execute($data);
+        $produtoCriado = $this->criarProdutoUseCase->execute($dto);
 
-        $response->getBody()->write(json_encode([
-            'id' => $produto->getId(),
-            'nome' => $produto->getNome(),
-            'descricao' => $produto->getDescricao(),
-            'preco' => $produto->getPreco(),
-            'image' => $produto->getImage(),
-            'categoria_id' => $produto->getCategoriaId()
-        ]));
+        $response->getBody()->write(json_encode($produtoCriado->toArray()));
 
         return $response
             ->withHeader('Content-Type', 'application/json')
@@ -52,22 +39,12 @@ class ProdutoController
     {
         $id = $args['id'];
         $data = $request->getParsedBody();
+        $dto = ProdutoDTO::fromArray($data);
 
         try {
-            $produto = $this->atualizarProdutoUseCase->execute($id, $data);
-
-            $response->getBody()->write(json_encode([
-                'id' => $produto->getId(),
-                'nome' => $produto->getNome(),
-                'descricao' => $produto->getDescricao(),
-                'preco' => $produto->getPreco(),
-                'image' => $produto->getImage(),
-                'categoria_id' => $produto->getCategoriaId()
-            ]));
-
-            return $response
-                ->withHeader('Content-Type', 'application/json')
-                ->withStatus(200);
+            $produtoAtualizado = $this->atualizarProdutoUseCase->execute($id, $dto);
+            $response->getBody()->write(json_encode($produtoAtualizado->toArray()));
+            return $response->withHeader('Content-Type', 'application/json');
         } catch (\Exception $e) {
             $response->getBody()->write(json_encode(['error' => $e->getMessage()]));
             return $response
@@ -82,7 +59,6 @@ class ProdutoController
 
         try {
             $this->deletarProdutoUseCase->execute($id);
-
             return $response->withStatus(204);
         } catch (\Exception $e) {
             $response->getBody()->write(json_encode(['error' => $e->getMessage()]));
@@ -94,49 +70,26 @@ class ProdutoController
 
     public function listar(Request $request, Response $response): Response
     {
-        $produtos = $this->produtoRepository->findAll();
+        $produtos = $this->listarProdutosUseCase->execute();
 
-        $data = array_map(function ($produto) {
-            return [
-                'id' => $produto->getId(),
-                'nome' => $produto->getNome(),
-                'descricao' => $produto->getDescricao(),
-                'preco' => $produto->getPreco(),
-                'image' => $produto->getImage(),
-                'categoria_id' => $produto->getCategoriaId()
-            ];
-        }, $produtos);
+        $response->getBody()->write(json_encode(array_map(fn($dto) => $dto->toArray(), $produtos)));
 
-        $response->getBody()->write(json_encode($data));
-
-        return $response
-            ->withHeader('Content-Type', 'application/json')
-            ->withStatus(200);
+        return $response->withHeader('Content-Type', 'application/json');
     }
 
     public function obter(Request $request, Response $response, array $args): Response
     {
         $id = $args['id'];
-        $produto = $this->produtoRepository->findById($id);
 
-        if (!$produto) {
-            $response->getBody()->write(json_encode(['error' => 'Produto não encontrado']));
+        try {
+            $produto = $this->obterProdutoUseCase->execute($id);
+            $response->getBody()->write(json_encode($produto->toArray()));
+            return $response->withHeader('Content-Type', 'application/json');
+        } catch (\Exception $e) {
+            $response->getBody()->write(json_encode(['error' => $e->getMessage()]));
             return $response
                 ->withHeader('Content-Type', 'application/json')
                 ->withStatus(404);
         }
-
-        $response->getBody()->write(json_encode([
-            'id' => $produto->getId(),
-            'nome' => $produto->getNome(),
-            'descricao' => $produto->getDescricao(),
-            'preco' => $produto->getPreco(),
-            'image' => $produto->getImage(),
-            'categoria_id' => $produto->getCategoriaId()
-        ]));
-
-        return $response
-            ->withHeader('Content-Type', 'application/json')
-            ->withStatus(200);
     }
 }

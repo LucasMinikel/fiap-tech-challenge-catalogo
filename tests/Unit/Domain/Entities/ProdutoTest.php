@@ -9,18 +9,11 @@ class ProdutoTest extends TestCase
 {
     public function testCriacaoDeProduto()
     {
-        $produto = new Produto(
-            'PROD123',
-            'Produto Teste',
-            'Descrição do Produto Teste',
-            10.99,
-            'imagem.jpg',
-            'CATE456'
-        );
+        $produto = new Produto('PROD123', 'Nome', 'Descrição', 10.99, 'imagem.jpg', 'CATE456');
 
         $this->assertEquals('PROD123', $produto->getId());
-        $this->assertEquals('Produto Teste', $produto->getNome());
-        $this->assertEquals('Descrição do Produto Teste', $produto->getDescricao());
+        $this->assertEquals('Nome', $produto->getNome());
+        $this->assertEquals('Descrição', $produto->getDescricao());
         $this->assertEquals(10.99, $produto->getPreco());
         $this->assertEquals('imagem.jpg', $produto->getImage());
         $this->assertEquals('CATE456', $produto->getCategoriaId());
@@ -28,14 +21,7 @@ class ProdutoTest extends TestCase
 
     public function testAtualizacaoDeProduto()
     {
-        $produto = new Produto(
-            'PROD123',
-            'Produto Teste',
-            'Descrição do Produto Teste',
-            10.99,
-            'imagem.jpg',
-            'CATE456'
-        );
+        $produto = new Produto('PROD123', 'Nome', 'Descrição', 10.99, 'imagem.jpg', 'CATE456');
 
         $produto->setNome('Novo Nome');
         $produto->setDescricao('Nova Descrição');

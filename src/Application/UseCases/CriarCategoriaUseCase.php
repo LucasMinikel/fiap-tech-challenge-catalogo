@@ -2,27 +2,26 @@
 
 namespace App\Application\UseCases;
 
+use App\Application\DTOs\CategoriaDTO;
 use App\Domain\Entities\Categoria;
 use App\Domain\Repositories\CategoriaRepositoryInterface;
 
 class CriarCategoriaUseCase
 {
-    private CategoriaRepositoryInterface $categoriaRepository;
+    public function __construct(
+        private CategoriaRepositoryInterface $categoriaRepository
+    ) {}
 
-    public function __construct(CategoriaRepositoryInterface $categoriaRepository)
+    public function execute(CategoriaDTO $dto): CategoriaDTO
     {
-        $this->categoriaRepository = $categoriaRepository;
-    }
-
-    public function execute(array $data): Categoria
-    {
-        $categoria = new Categoria(
-            'CATE' . uniqid(),
-            $data['nome']
-        );
+        $id = 'CATE' . uniqid();
+        $categoria = new Categoria($id, $dto->nome);
 
         $this->categoriaRepository->save($categoria);
 
-        return $categoria;
+        return new CategoriaDTO(
+            $categoria->getId(),
+            $categoria->getNome()
+        );
     }
 }
