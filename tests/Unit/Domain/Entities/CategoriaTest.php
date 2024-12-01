@@ -17,10 +17,9 @@ class CategoriaTest extends TestCase
 
     public function testAtualizacaoDeCategoria()
     {
-        $categoria = new Categoria('CATE123', 'Nome da Categoria');
+        $categoria = new Categoria('CATE123', 'Nome Original');
+        $categoria->setNome('Nome Atualizado');
 
-        $categoria->setNome('Novo Nome da Categoria');
-
-        $this->assertEquals('Novo Nome da Categoria', $categoria->getNome());
+        $this->assertEquals('Nome Atualizado', $categoria->getNome());
     }
 }
