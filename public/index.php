@@ -20,6 +20,7 @@ $container = $containerBuilder->build();
 $app = Bridge::create($container);
 
 $app->addErrorMiddleware(true, true, true);
+$app->add(new \Slim\Middleware\BodyParsingMiddleware());
 
 $app->post('/produtos', [\App\Infrastructure\API\Controllers\ProdutoController::class, 'criar']);
 $app->put('/produtos/{id}', [\App\Infrastructure\API\Controllers\ProdutoController::class, 'atualizar']);
