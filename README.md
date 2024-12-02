@@ -88,3 +88,16 @@ Para adicionar novas funcionalidades ou fazer alterações:
 4. Faça commit das suas alterações: `git commit -am 'Adiciona nova feature'`
 5. Faça push para a branch: `git push origin minha-nova-feature`
 6. Crie um novo Pull Request
+
+## Documentação da API
+
+A documentação da API está disponível através do Swagger UI. Para acessá-la:
+
+1. Certifique-se de que a aplicação está rodando.
+2. Acesse `http://seu-dominio/docs` no seu navegador.
+
+A interface do Swagger UI fornecerá uma visão interativa de todos os endpoints da API, incluindo detalhes sobre os parâmetros de requisição e respostas esperadas.
+
+Para desenvolvedores:
+- A especificação OpenAPI está localizada no arquivo `openapi.yaml` na raiz do projeto.
+- Ao adicionar ou modificar endpoints, atualize o arquivo `openapi.yaml` para manter a documentação precisa e atualizada.
