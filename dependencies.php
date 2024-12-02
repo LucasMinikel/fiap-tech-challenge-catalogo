@@ -1,8 +1,11 @@
 <?php
 
+
 use DI\ContainerBuilder;
 use App\Domain\Repositories\ProdutoRepositoryInterface;
+use App\Domain\Repositories\CategoriaRepositoryInterface;
 use App\Infrastructure\Persistence\ProdutoRepository;
+use App\Infrastructure\Persistence\CategoriaRepository;
 
 return function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
@@ -23,6 +26,9 @@ return function (ContainerBuilder $containerBuilder) {
         },
         ProdutoRepositoryInterface::class => function (PDO $pdo) {
             return new ProdutoRepository($pdo);
+        },
+        CategoriaRepositoryInterface::class => function (PDO $pdo) {
+            return new CategoriaRepository($pdo);
         },
     ]);
 };

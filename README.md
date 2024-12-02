@@ -38,22 +38,22 @@ DB_HOST=db DB_NAME=catalogo DB_USER=root DB_PASS=sua_senha
 
 
 3. Inicie os containers Docker:
-docker-compose up -d
+docker compose up -d
 
 
 4. Instale as dependências do projeto:
-docker-compose exec app composer install
+docker compose exec app composer install
 
 
 5. Execute as migrações do banco de dados:
-docker-compose exec app php vendor/bin/phinx migrate
+docker compose exec app php run_migrations.php
 
 
 ## Executando os Testes
 
 Para executar os testes unitários, use o seguinte comando:
 
-docker-compose exec app composer test
+docker compose exec app composer test
 
 
 ## Uso da API
