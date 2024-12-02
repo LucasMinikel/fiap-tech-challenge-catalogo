@@ -3,6 +3,8 @@
 use DI\Bridge\Slim\Bridge;
 use DI\ContainerBuilder;
 use Dotenv\Dotenv;
+use Slim\Psr7\Request;
+use Slim\Psr7\Response;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -16,6 +18,8 @@ $dependencies($containerBuilder);
 
 $container = $containerBuilder->build();
 $app = Bridge::create($container);
+
+$app->addErrorMiddleware(true, true, true);
 
 $app->post('/produtos', [\App\Infrastructure\API\Controllers\ProdutoController::class, 'criar']);
 $app->put('/produtos/{id}', [\App\Infrastructure\API\Controllers\ProdutoController::class, 'atualizar']);

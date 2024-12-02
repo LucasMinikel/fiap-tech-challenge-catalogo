@@ -35,9 +35,9 @@ class ProdutoController
             ->withStatus(201);
     }
 
-    public function atualizar(Request $request, Response $response, array $args): Response
+    public function atualizar(Request $request, Response $response): Response
     {
-        $id = $args['id'];
+        $id = $request->getAttribute('id');
         $data = $request->getParsedBody();
         $dto = ProdutoDTO::fromArray($data);
 
@@ -53,9 +53,9 @@ class ProdutoController
         }
     }
 
-    public function deletar(Request $request, Response $response, array $args): Response
+    public function deletar(Request $request, Response $response): Response
     {
-        $id = $args['id'];
+        $id = $request->getAttribute('id');
 
         try {
             $this->deletarProdutoUseCase->execute($id);
@@ -77,9 +77,9 @@ class ProdutoController
         return $response->withHeader('Content-Type', 'application/json');
     }
 
-    public function obter(Request $request, Response $response, array $args): Response
+    public function obter(Request $request, Response $response): Response
     {
-        $id = $args['id'];
+        $id = $request->getAttribute('id');
 
         try {
             $produto = $this->obterProdutoUseCase->execute($id);
