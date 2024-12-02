@@ -35,7 +35,7 @@ class AtualizarProdutoUseCaseTest extends TestCase
         $this->assertEquals('Nome Novo', $result->nome);
         $this->assertEquals('Descrição Nova', $result->descricao);
         $this->assertEquals(10.99, $result->preco);
-        $this->assertEquals('imagem_nova.jpg', $result->image);
+        $this->assertEquals('imagem_nova.jpg', $result->imagem);
         $this->assertEquals('CATE789', $result->categoriaId);
     }
 

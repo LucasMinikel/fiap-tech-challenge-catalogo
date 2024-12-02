@@ -30,7 +30,7 @@ class ProdutoRepository implements ProdutoRepositoryInterface
             $data['nome'],
             $data['descricao'],
             $data['preco'],
-            $data['image'],
+            $data['imagem'],
             $data['categoria_id']
         );
     }
@@ -46,7 +46,7 @@ class ProdutoRepository implements ProdutoRepositoryInterface
                 $data['nome'],
                 $data['descricao'],
                 $data['preco'],
-                $data['image'],
+                $data['imagem'],
                 $data['categoria_id']
             );
         }
@@ -56,26 +56,26 @@ class ProdutoRepository implements ProdutoRepositoryInterface
 
     public function save(Produto $produto): void
     {
-        $stmt = $this->pdo->prepare('INSERT INTO produtos (id, nome, descricao, preco, image, categoria_id) VALUES (:id, :nome, :descricao, :preco, :image, :categoria_id)');
+        $stmt = $this->pdo->prepare('INSERT INTO produtos (id, nome, descricao, preco, imagem, categoria_id) VALUES (:id, :nome, :descricao, :preco, :imagem, :categoria_id)');
         $stmt->execute([
             'id' => $produto->getId(),
             'nome' => $produto->getNome(),
             'descricao' => $produto->getDescricao(),
             'preco' => $produto->getPreco(),
-            'image' => $produto->getImage(),
+            'imagem' => $produto->getImage(),
             'categoria_id' => $produto->getCategoriaId()
         ]);
     }
 
     public function update(Produto $produto): void
     {
-        $stmt = $this->pdo->prepare('UPDATE produtos SET nome = :nome, descricao = :descricao, preco = :preco, image = :image, categoria_id = :categoria_id WHERE id = :id');
+        $stmt = $this->pdo->prepare('UPDATE produtos SET nome = :nome, descricao = :descricao, preco = :preco, imagem = :imagem, categoria_id = :categoria_id WHERE id = :id');
         $stmt->execute([
             'id' => $produto->getId(),
             'nome' => $produto->getNome(),
             'descricao' => $produto->getDescricao(),
             'preco' => $produto->getPreco(),
-            'image' => $produto->getImage(),
+            'imagem' => $produto->getImage(),
             'categoria_id' => $produto->getCategoriaId()
         ]);
     }

@@ -47,7 +47,7 @@ class ProdutoControllerTest extends TestCase
                 'nome' => 'Produto Teste',
                 'descricao' => 'Descrição do Produto Teste',
                 'preco' => 10.99,
-                'image' => 'imagem.jpg',
+                'imagem' => 'imagem.jpg',
                 'categoria_id' => 'CATE123'
             ]);
 
@@ -74,7 +74,7 @@ class ProdutoControllerTest extends TestCase
                 'nome' => 'Produto Atualizado',
                 'descricao' => 'Descrição Atualizada',
                 'preco' => 15.99,
-                'image' => 'nova_imagem.jpg',
+                'imagem' => 'nova_imagem.jpg',
                 'categoria_id' => 'CATE456'
             ]);
 

@@ -9,7 +9,7 @@ class ProdutoDTO
         public readonly string $nome,
         public readonly string $descricao,
         public readonly float $preco,
-        public readonly string $image,
+        public readonly string $imagem,
         public readonly string $categoriaId
     ) {}
 
@@ -20,7 +20,7 @@ class ProdutoDTO
             $data['nome'],
             $data['descricao'],
             $data['preco'],
-            $data['image'],
+            $data['imagem'],
             $data['categoria_id']
         );
     }
@@ -32,7 +32,7 @@ class ProdutoDTO
             'nome' => $this->nome,
             'descricao' => $this->descricao,
             'preco' => $this->preco,
-            'image' => $this->image,
+            'imagem' => $this->imagem,
             'categoria_id' => $this->categoriaId
         ];
     }

@@ -28,7 +28,7 @@ class ObterProdutoUseCaseTest extends TestCase
         $this->assertEquals('Nome', $result->nome);
         $this->assertEquals('Descrição', $result->descricao);
         $this->assertEquals(9.99, $result->preco);
-        $this->assertEquals('imagem.jpg', $result->image);
+        $this->assertEquals('imagem.jpg', $result->imagem);
         $this->assertEquals('CATE456', $result->categoriaId);
     }
 

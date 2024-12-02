@@ -15,7 +15,7 @@ class ProdutoDTOTest extends TestCase
         $this->assertEquals('Nome', $dto->nome);
         $this->assertEquals('Descrição', $dto->descricao);
         $this->assertEquals(10.99, $dto->preco);
-        $this->assertEquals('imagem.jpg', $dto->image);
+        $this->assertEquals('imagem.jpg', $dto->imagem);
         $this->assertEquals('CATE456', $dto->categoriaId);
     }
 
@@ -26,7 +26,7 @@ class ProdutoDTOTest extends TestCase
             'nome' => 'Nome',
             'descricao' => 'Descrição',
             'preco' => 10.99,
-            'image' => 'imagem.jpg',
+            'imagem' => 'imagem.jpg',
             'categoria_id' => 'CATE456'
         ];
 
@@ -36,7 +36,7 @@ class ProdutoDTOTest extends TestCase
         $this->assertEquals('Nome', $dto->nome);
         $this->assertEquals('Descrição', $dto->descricao);
         $this->assertEquals(10.99, $dto->preco);
-        $this->assertEquals('imagem.jpg', $dto->image);
+        $this->assertEquals('imagem.jpg', $dto->imagem);
         $this->assertEquals('CATE456', $dto->categoriaId);
     }
 
@@ -51,7 +51,7 @@ class ProdutoDTOTest extends TestCase
             'nome' => 'Nome',
             'descricao' => 'Descrição',
             'preco' => 10.99,
-            'image' => 'imagem.jpg',
+            'imagem' => 'imagem.jpg',
             'categoria_id' => 'CATE456'
         ], $array);
     }
