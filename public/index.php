@@ -1,14 +1,21 @@
 <?php
 
-use DI\Container;
-use Slim\Factory\AppFactory;
+use DI\Bridge\Slim\Bridge;
+use DI\ContainerBuilder;
+use Dotenv\Dotenv;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$container = new Container();
+$dotenv = Dotenv::createImmutable(__DIR__ . '/..');
+$dotenv->load();
 
-AppFactory::setContainer($container);
-$app = AppFactory::create();
+
+$containerBuilder = new ContainerBuilder();
+$dependencies = require __DIR__ . '/../dependencies.php';
+$dependencies($containerBuilder);
+
+$container = $containerBuilder->build();
+$app = Bridge::create($container);
 
 $app->post('/produtos', [\App\Infrastructure\API\Controllers\ProdutoController::class, 'criar']);
 $app->put('/produtos/{id}', [\App\Infrastructure\API\Controllers\ProdutoController::class, 'atualizar']);

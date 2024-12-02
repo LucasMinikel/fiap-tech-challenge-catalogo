@@ -14,15 +14,16 @@ services:
       - catalogo
 
   db:
-    image: postgres:13
-    container_name: catalogo-db
-    restart: unless-stopped
+    image: mysql:8.0
     environment:
-      POSTGRES_DB: ${DB_DATABASE}
-      POSTGRES_USER: ${DB_USERNAME}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
     volumes:
-      - dbdata:/var/lib/postgresql/data
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
     networks:
       - catalogo
 
@@ -43,5 +44,4 @@ networks:
     driver: bridge
 
 volumes:
-  dbdata:
-    driver: local
+  mysql_data:
