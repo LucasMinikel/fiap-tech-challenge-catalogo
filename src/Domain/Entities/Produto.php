@@ -9,7 +9,7 @@ class Produto
         private string $nome,
         private string $descricao,
         private float $preco,
-        private string $image,
+        private string $imagem,
         private string $categoriaId
     ) {}
 
@@ -50,12 +50,12 @@ class Produto
 
     public function getImage(): string
     {
-        return $this->image;
+        return $this->imagem;
     }
 
-    public function setImage(string $image): void
+    public function setImage(string $imagem): void
     {
-        $this->image = $image;
+        $this->imagem = $imagem;
     }
 
     public function getCategoriaId(): string

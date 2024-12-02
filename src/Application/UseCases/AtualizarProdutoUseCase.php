@@ -23,7 +23,7 @@ class AtualizarProdutoUseCase
         $produto->setNome($dto->nome);
         $produto->setDescricao($dto->descricao);
         $produto->setPreco($dto->preco);
-        $produto->setImage($dto->image);
+        $produto->setImage($dto->imagem);
         $produto->setCategoriaId($dto->categoriaId);
 
         $this->produtoRepository->update($produto);

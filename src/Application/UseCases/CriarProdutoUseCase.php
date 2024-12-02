@@ -20,7 +20,7 @@ class CriarProdutoUseCase
             $dto->nome,
             $dto->descricao,
             $dto->preco,
-            $dto->image,
+            $dto->imagem,
             $dto->categoriaId
         );
 

@@ -29,7 +29,7 @@ class CriarProdutoUseCaseTest extends TestCase
         $this->assertEquals('Nome', $result->nome);
         $this->assertEquals('Descrição', $result->descricao);
         $this->assertEquals(10.99, $result->preco);
-        $this->assertEquals('imagem.jpg', $result->image);
+        $this->assertEquals('imagem.jpg', $result->imagem);
         $this->assertEquals('CATE456', $result->categoriaId);
     }
 }

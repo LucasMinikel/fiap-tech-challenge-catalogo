@@ -47,7 +47,7 @@ class ProdutoControllerTest extends TestCase
                 'nome' => 'Produto Teste',
                 'descricao' => 'Descrição do Produto Teste',
                 'preco' => 10.99,
-                'image' => 'imagem.jpg',
+                'imagem' => 'imagem.jpg',
                 'categoria_id' => 'CATE123'
             ]);
 
@@ -69,12 +69,12 @@ class ProdutoControllerTest extends TestCase
 
     public function testAtualizar()
     {
-        $request = (new ServerRequestFactory())->createServerRequest('PUT', '/produtos/PROD123')
+        $request = (new ServerRequestFactory())->createServerRequest('PUT', '/produtos')->withAttribute('id', 'PROD123')
             ->withParsedBody([
                 'nome' => 'Produto Atualizado',
                 'descricao' => 'Descrição Atualizada',
                 'preco' => 15.99,
-                'image' => 'nova_imagem.jpg',
+                'imagem' => 'nova_imagem.jpg',
                 'categoria_id' => 'CATE456'
             ]);
 
@@ -96,7 +96,7 @@ class ProdutoControllerTest extends TestCase
 
     public function testDeletar()
     {
-        $request = (new ServerRequestFactory())->createServerRequest('DELETE', '/produtos/PROD123');
+        $request = (new ServerRequestFactory())->createServerRequest('DELETE', '/produtos')->withAttribute('id', 'PROD123');
 
         $this->deletarProdutoUseCase->expects($this->once())
             ->method('execute')
@@ -133,7 +133,7 @@ class ProdutoControllerTest extends TestCase
 
     public function testObter()
     {
-        $request = (new ServerRequestFactory())->createServerRequest('GET', '/produtos/PROD123');
+        $request = (new ServerRequestFactory())->createServerRequest('GET', '/produtos')->withAttribute('id', 'PROD123');
 
         $produto = new ProdutoDTO('PROD123', 'Produto Teste', 'Descrição do Produto Teste', 10.99, 'imagem.jpg', 'CATE123');
 
@@ -154,7 +154,7 @@ class ProdutoControllerTest extends TestCase
 
     public function testObterProdutoNaoEncontrado()
     {
-        $request = (new ServerRequestFactory())->createServerRequest('GET', '/produtos/PROD999');
+        $request = (new ServerRequestFactory())->createServerRequest('GET', '/produtos')->withAttribute('id', 'PROD999');
 
         $this->obterProdutoUseCase->expects($this->once())
             ->method('execute')

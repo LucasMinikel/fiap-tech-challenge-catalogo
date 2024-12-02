@@ -63,7 +63,7 @@ class CategoriaControllerTest extends TestCase
 
     public function testAtualizar()
     {
-        $request = (new ServerRequestFactory())->createServerRequest('PUT', '/categorias/CATE123')
+        $request = (new ServerRequestFactory())->createServerRequest('PUT', '/categorias')->withAttribute('id', 'CATE123')
             ->withParsedBody(['nome' => 'Categoria Atualizada']);
 
         $categoriaAtualizada = new CategoriaDTO('CATE123', 'Categoria Atualizada');
@@ -84,7 +84,7 @@ class CategoriaControllerTest extends TestCase
 
     public function testDeletar()
     {
-        $request = (new ServerRequestFactory())->createServerRequest('DELETE', '/categorias/CATE123');
+        $request = (new ServerRequestFactory())->createServerRequest('DELETE', '/categorias')->withAttribute('id', 'CATE123');
 
         $this->deletarCategoriaUseCase->expects($this->once())
             ->method('execute')
@@ -121,7 +121,7 @@ class CategoriaControllerTest extends TestCase
 
     public function testObter()
     {
-        $request = (new ServerRequestFactory())->createServerRequest('GET', '/categorias/CATE123');
+        $request = (new ServerRequestFactory())->createServerRequest('GET', '/categorias')->withAttribute('id', 'CATE123');
 
         $categoria = new CategoriaDTO('CATE123', 'Categoria Teste');
 
@@ -142,7 +142,7 @@ class CategoriaControllerTest extends TestCase
 
     public function testObterCategoriaNaoEncontrada()
     {
-        $request = (new ServerRequestFactory())->createServerRequest('GET', '/categorias/CATE999');
+        $request = (new ServerRequestFactory())->createServerRequest('GET', '/categorias')->withAttribute('id', 'CATE999');
 
         $this->obterCategoriaUseCase->expects($this->once())
             ->method('execute')
