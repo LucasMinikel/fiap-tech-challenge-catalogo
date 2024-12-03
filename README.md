@@ -58,7 +58,7 @@ docker compose exec app composer test
 
 ## Uso da API
 
-A API estará disponível em `http://localhost:8080`. Aqui estão alguns exemplos de endpoints:
+A API estará disponível em `http://localhost:8082`. Aqui estão alguns exemplos de endpoints:
 
 ### Produtos
 
