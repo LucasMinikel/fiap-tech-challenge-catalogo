@@ -73,8 +73,8 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       with:
         args: >
-          -Dsonar.projectKey=seu_usuario_github_catalogo
-          -Dsonar.organization=sua_organizacao_sonarcloud
+          -Dsonar.projectKey=LucasMinikel_fiap-tech-challenge-catalogo
+          -Dsonar.organization=lucasminikel
           -Dsonar.sources=src
           -Dsonar.tests=tests,features
           -Dsonar.php.tests.reportPath=test-report.xml
