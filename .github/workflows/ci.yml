@@ -9,14 +9,17 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    
     steps:
     - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
 
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
         php-version: '8.2'
+        coverage: xdebug
         
     - name: Validate composer.json and composer.lock
       run: composer validate
@@ -24,8 +27,55 @@ jobs:
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress --no-suggest
 
-    - name: Run test suite
-      run: composer run-script test
+    - name: Run unit tests with coverage
+      run: vendor/bin/phpunit --configuration phpunit.xml --coverage-clover coverage.xml
 
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v1
+    - name: Run BDD tests
+      run: vendor/bin/behat
+
+    - name: Check code coverage
+      run: |
+        echo "Checking for coverage.xml file..."
+        if [ ! -f coverage.xml ]; then
+          echo "coverage.xml file not found!"
+          exit 1
+        fi
+        
+        echo "coverage.xml file found. Displaying first 20 lines:"
+        head -n 20 coverage.xml
+        
+        echo "Attempting to extract coverage rate..."
+        COVERAGE=$(grep -oP '<coverage[^>]+line-rate="\K[^"]+' coverage.xml || echo "EXTRACTION_FAILED")
+        echo "Extracted coverage: $COVERAGE"
+        
+        if [ "$COVERAGE" = "EXTRACTION_FAILED" ]; then
+          echo "Failed to extract coverage rate from coverage.xml"
+          echo "Full content of coverage.xml:"
+          cat coverage.xml
+          exit 1
+        fi
+        
+        echo "Calculating coverage percentage..."
+        COVERAGE_PERCENTAGE=$(echo "$COVERAGE * 100" | bc)
+        echo "Coverage percentage: $COVERAGE_PERCENTAGE%"
+        
+        if (( $(echo "$COVERAGE_PERCENTAGE < 80" | bc -l) )); then
+          echo "Code coverage is below 80%: $COVERAGE_PERCENTAGE%"
+          exit 1
+        else
+          echo "Code coverage is $COVERAGE_PERCENTAGE%"
+        fi
+
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      with:
+        args: >
+          -Dsonar.projectKey=seu_usuario_github_catalogo
+          -Dsonar.organization=sua_organizacao_sonarcloud
+          -Dsonar.sources=src
+          -Dsonar.tests=tests,features
+          -Dsonar.php.tests.reportPath=test-report.xml
+          -Dsonar.php.coverage.reportPaths=coverage.xml
