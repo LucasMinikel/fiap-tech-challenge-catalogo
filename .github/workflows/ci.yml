@@ -33,6 +33,9 @@ jobs:
     - name: Run BDD tests
       run: vendor/bin/behat
 
+    - name: Install xmllint
+      run: sudo apt-get install -y libxml2-utils
+
     - name: Check code coverage
       run: |
         echo "Checking for coverage.xml file..."
@@ -41,22 +44,20 @@ jobs:
           exit 1
         fi
         
-        echo "coverage.xml file found. Displaying first 20 lines:"
-        head -n 20 coverage.xml
+        echo "coverage.xml file found. Extracting coverage data..."
         
-        echo "Attempting to extract coverage rate..."
-        COVERAGE=$(grep -oP '<coverage[^>]+line-rate="\K[^"]+' coverage.xml || echo "EXTRACTION_FAILED")
-        echo "Extracted coverage: $COVERAGE"
+        COVERED_ELEMENTS=$(xmllint --xpath "string(//project/metrics/@coveredelements)" coverage.xml)
+        TOTAL_ELEMENTS=$(xmllint --xpath "string(//project/metrics/@elements)" coverage.xml)
         
-        if [ "$COVERAGE" = "EXTRACTION_FAILED" ]; then
-          echo "Failed to extract coverage rate from coverage.xml"
-          echo "Full content of coverage.xml:"
-          cat coverage.xml
+        if [ -z "$COVERED_ELEMENTS" ] || [ -z "$TOTAL_ELEMENTS" ]; then
+          echo "Failed to extract coverage data from coverage.xml"
           exit 1
         fi
         
-        echo "Calculating coverage percentage..."
-        COVERAGE_PERCENTAGE=$(echo "$COVERAGE * 100" | bc)
+        echo "Covered elements: $COVERED_ELEMENTS"
+        echo "Total elements: $TOTAL_ELEMENTS"
+        
+        COVERAGE_PERCENTAGE=$(echo "scale=2; $COVERED_ELEMENTS / $TOTAL_ELEMENTS * 100" | bc)
         echo "Coverage percentage: $COVERAGE_PERCENTAGE%"
         
         if (( $(echo "$COVERAGE_PERCENTAGE < 80" | bc -l) )); then
